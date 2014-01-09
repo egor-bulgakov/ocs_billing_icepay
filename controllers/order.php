@@ -67,6 +67,10 @@ class OCSBILLINGICEPAY_CTRL_Order extends OW_ActionController
             
             try
             {
+                if ( !$country )
+                {
+                    $country = '00';
+                }
                 $paymentObj = new Icepay_PaymentObject();
                 $paymentObj->setAmount($sale->totalAmount * 100)
                     ->setCountry($country)

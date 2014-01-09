@@ -81,21 +81,35 @@ class OCSBILLINGICEPAY_CLASS_IcepayAdapter implements OW_BillingAdapter
         return $plugin->getStaticUrl() . 'img/icepay-logo.png';
     }
     
-    public function detectCountry ()
+    public function detectCountry()
     {
-        $sql = 'SELECT `cc2` FROM `' . BOL_GeolocationIpToCountryDao::getTableName() . '` WHERE inet_aton(:ip) >= ipFrom AND inet_aton(:ip) <= ipTo';
-        $country = OW::getDbo()->queryForColumn($sql, array('ip' => $_SERVER['REMOTE_ADDR']));
-
-        if ( mb_strlen($country) )
+        try
         {
-            return $country;
+            $sql = 'SELECT `cc2` FROM `' . BOL_GeolocationIpToCountryDao::getInstance()->getTableName() . '`
+                WHERE inet_aton(:ip) >= ipFrom AND inet_aton(:ip) <= ipTo';
+
+            return OW::getDbo()->queryForColumn($sql, array('ip' => OW::getRequest()->getRemoteAddress()));
         }
-        
-        return '00';
+        catch ( Exception $e )
+        {
+            return null;
+        }
     }
     
-    public function getLanguageByCountry ($country)
+    public function getLanguageByCountry( $country = null )
     {
+        if ( $country === null )
+        {
+            if ( isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) )
+            {
+                return strtoupper(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
+            }
+            else
+            {
+                $country = '00';
+            }
+        }
+
         $langs = array(
             '00'  => 'EN', // default
             'AT' => 'DE', // Austria

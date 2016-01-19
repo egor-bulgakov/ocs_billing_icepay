@@ -3,7 +3,7 @@
 /**
  *  ICEPAY API
  *
- *  @version 2.2.0
+ *  @version 2.3.0
  *  @author Olaf Abbenhuis
  *  @author Wouter van Tilburg
  *  @copyright Copyright (c) 2012, ICEPAY
@@ -37,7 +37,7 @@ require_once(DIR . DS . "icepay_api_base.php");
 class Icepay_Api_Basic extends Icepay_Api_Base {
 
     private static $instance;
-    private $version = "1.0.2";
+    private $version = "2.5.3";
     private $_folderPaymentMethods;
     private $paymentMethods = null; // Classes
     private $_paymentMethodsObject = null; // Loaded classes
@@ -525,8 +525,6 @@ class Icepay_Basicmode extends Icepay_Api_Base {
      * @return string
      */
     protected function prepareParameters() {
-        //var_dump($this->data);
-
         return http_build_query($this->data, '', '&');
     }
 

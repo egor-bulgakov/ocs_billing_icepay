@@ -117,9 +117,9 @@ class OCSBILLINGICEPAY_CTRL_Order extends OW_ActionController
     public function postback ()
     {
         $logger = OW::getLogger('ocsbillingicepay');
-        $logger->addEntry(print_r($_REQUEST, true), 'postback.data-array');
+        $logger->addEntry(print_r($_POST, true), 'postback.data-array');
 
-        if ( empty($_REQUEST['Reference']) )
+        if ( empty($_POST['Reference']) )
         {
             $logger->addEntry("Empty reference", 'postback.reference');
             $logger->writeLog();
@@ -136,15 +136,23 @@ class OCSBILLINGICEPAY_CTRL_Order extends OW_ActionController
         
         $icepay = new Icepay_Postback();
         $icepay->setMerchantID($merchantId)
-            ->setSecretCode($encryptionCode)
-            ->doIPCheck();
+            ->setSecretCode($encryptionCode);
         
         try
         {
             if ( $icepay->validate() )
             {
-                $hash = trim($_REQUEST['Reference']);
-                $transId = trim($_REQUEST['TransactionID']);
+                $postbackObj = $icepay->getPostback();
+
+                if ($postbackObj->status != 'OK') {
+                    $logger->addEntry("Postback status is not OK: " . $postbackObj->status . '('.$postbackObj->statusCode .')' , 'postback-status');
+                    
+                    $logger->writeLog();
+                    exit();
+                }
+                
+                $hash = trim($postbackObj->reference);
+                $transId = trim($postbackObj->transactionID);
                 $sale = $billingService->getSaleByHash($hash);
                 
                 if ( !$sale || !mb_strlen($transId) )

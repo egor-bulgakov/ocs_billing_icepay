@@ -148,7 +148,7 @@ class OCSBILLINGICEPAY_CTRL_Order extends OW_ActionController
                     $logger->addEntry("Postback status is not OK: " . $postbackObj->status . '('.$postbackObj->statusCode .')' , 'postback-status');
                     
                     $logger->writeLog();
-                    exit();
+                    die('Postback validation error');
                 }
                 
                 $hash = trim($postbackObj->reference);
@@ -159,7 +159,7 @@ class OCSBILLINGICEPAY_CTRL_Order extends OW_ActionController
                 {
                     $logger->addEntry("Sale not found", 'postback.sale');
                     $logger->writeLog();
-                    exit();
+                    die('Sale not found');
                 }
                 
                 $adapter = new OCSBILLINGICEPAY_CLASS_IcepayAdapter();
@@ -179,6 +179,8 @@ class OCSBILLINGICEPAY_CTRL_Order extends OW_ActionController
                 }
                 
                 $logger->addEntry("Validated!", 'validate-status');
+                $logger->writeLog();
+                exit('OK');
             }
             else
             {
@@ -191,7 +193,7 @@ class OCSBILLINGICEPAY_CTRL_Order extends OW_ActionController
         }
         
         $logger->writeLog();
-        exit();
+        exit('Not validated');
     }
     
     public function completed ()

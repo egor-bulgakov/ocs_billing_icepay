@@ -8,7 +8,7 @@
     <authorEmail>plugins@oxcandystore.com</authorEmail>
 	<authorUrl>http://oxcandystore.com</authorUrl>
 	<developerKey>c36f83152f203c5a947a3fb053e4bc24</developerKey>
-    <build>3</build>
+    <build>4</build>
     <copyright>(C) 2013 Oxwall CandyStore. All rights reserved.</copyright>
     <license>CPAL 1.0</license>
     <licenseUrl>http://opensource.org/licenses/CPAL-1.0</licenseUrl>
